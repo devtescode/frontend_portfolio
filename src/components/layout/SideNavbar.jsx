@@ -131,8 +131,8 @@ const SideNavbar = () => {
 
       {/* Desktop Side Navbar - Always collapsed */}
       {!isMobile && (
-        <aside className="fixed top-0 left-0 h-full w-[72px] z-50">
-          <div className="h-full bg-card/95 backdrop-blur-xl border-r border-border flex flex-col overflow-hidden">
+        <aside className="fixed top-0 left-0 h-full w-[82px] z-50">
+          <div className="h-full bg-card/95 backdrop-blur-xl border-r border-border flex flex-col overflow-hidden rounded-tr-3xl rounded-br-3xl">
             
             <nav className="flex-1 py-4 px-3 flex flex-col items-center gap-2 overflow-hidden">
               {navLinks.map((link) => (
@@ -184,11 +184,11 @@ const SideNavbar = () => {
       {/* Mobile Side Navbar - Slide out panel */}
       {isMobile && (
         <aside
-          className={`fixed top-0 left-0 h-full w-[72px] z-50 transition-transform duration-300 ease-out ${
+          className={`fixed top-0 left-0 h-full w-[82px] z-50 transition-transform duration-300 ease-out ${
             isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
-          <div className="h-full bg-card/95 backdrop-blur-xl border-r border-border flex flex-col overflow-hidden">
+          <div className="rounded-tr-3xl rounded-br-3xl h-full bg-card/95 backdrop-blur-xl border-r border-border flex flex-col overflow-hidden">
             {/* Logo */}
             {/* <div className="p-3 border-b border-border flex justify-center">
               <Tooltip delayDuration={0}>
