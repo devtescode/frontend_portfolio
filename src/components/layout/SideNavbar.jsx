@@ -168,12 +168,12 @@ const SideNavbar = () => {
                 <ActionButton
                   icon={Github}
                   label="GitHub"
-                  href="https://github.com"
+                  href="https://github.com/devtescode"
                 />
                 <ActionButton
                   icon={Linkedin}
                   label="LinkedIn"
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/teslim-agboola-ab069b252/"
                 />
               </div>
 
@@ -245,12 +245,12 @@ const SideNavbar = () => {
                 <ActionButton
                   icon={Github}
                   label="GitHub"
-                  href="https://github.com"
+                  href="https://github.com/devtescode"
                 />
                 <ActionButton
                   icon={Linkedin}
                   label="LinkedIn"
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/teslim-agboola-ab069b252/"
                 />
               </div>
 
