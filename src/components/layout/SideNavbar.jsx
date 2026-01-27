@@ -61,6 +61,16 @@ const SideNavbar = () => {
     };
   }, [isMobile, isOpen]);
 
+  const handleDownload = () => {
+        const fileUrl = "/teslimagboola_resume.pdf";
+        const link = document.createElement("a");
+        link.href = fileUrl;
+        link.setAttribute("download", "teslimagboola_resume.pdf");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
   const NavItem = ({ link, isActive }) => (
     <Tooltip delayDuration={0}>
       <TooltipTrigger asChild>
@@ -180,7 +190,7 @@ const SideNavbar = () => {
               {/* Resume Button */}
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
-                  <button className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 flex items-center justify-center text-primary-foreground shadow-md shadow-primary/20 transition-all duration-200">
+                  <button onClick={handleDownload} className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 flex items-center justify-center text-primary-foreground shadow-md shadow-primary/20 transition-all duration-200">
                     <Download className="w-5 h-5" />
                   </button>
                 </TooltipTrigger>
@@ -256,7 +266,7 @@ const SideNavbar = () => {
 
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
-                  <button className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 flex items-center justify-center text-primary-foreground shadow-md shadow-primary/20 transition-all duration-200">
+                  <button onClick={handleDownload} className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 flex items-center justify-center text-primary-foreground shadow-md shadow-primary/20 transition-all duration-200">
                     <Download className="w-5 h-5" />
                   </button>
                 </TooltipTrigger>
