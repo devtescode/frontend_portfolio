@@ -32,7 +32,7 @@ const skillCategories = [
     skills: [
       { name: 'Node.js', level: 92, icon: Server },
       { name: 'Express.js', level: 90, icon: Server },
-      { name: 'Python', level: 80, icon: Terminal },
+      { name: 'Python', level: 50, icon: Terminal },
       { name: 'GraphQL', level: 85, icon: Globe },
       { name: 'REST APIs', level: 95, icon: Cloud },
     ],
@@ -43,7 +43,7 @@ const skillCategories = [
     skills: [
       { name: 'MongoDB', level: 90, icon: Database },
       { name: 'PostgreSQL', level: 88, icon: Database },
-      { name: 'Redis', level: 75, icon: Database },
+      // { name: 'Redis', level: 75, icon: Database },
       { name: 'Firebase', level: 85, icon: Cloud },
     ],
   },
@@ -52,7 +52,7 @@ const skillCategories = [
     icon: Terminal,
     skills: [
       { name: 'Git', level: 95, icon: GitBranch },
-      { name: 'Docker', level: 80, icon: Cloud },
+      // { name: 'Docker', level: 80, icon: Cloud },
       { name: 'AWS', level: 78, icon: Cloud },
       { name: 'Figma', level: 85, icon: Palette },
       // { name: 'React Native', level: 70, icon: Smartphone },
@@ -114,9 +114,7 @@ const Skills = () => {
               Always <span className="gradient-text">Learning</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Technology evolves rapidly, and I'm committed to staying at the forefront.
-              Currently exploring AI/ML integration, Web3 technologies, and advanced
-              system design patterns.
+              Technology evolves rapidly, and I'm committed to staying at the forefront. Currently exploring AI/ML integration, Web3 technologies, mobile application development, and advanced system design patterns.
             </p>
           </div>
         </div>
