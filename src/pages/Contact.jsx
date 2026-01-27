@@ -55,9 +55,6 @@ const Contact = () => {
       .matches(/^[0-9]+$/, "Phone number should only contain numbers")
       .min(10, "Phone number should be at least 10 digits")
       .required("Phone number is required"),
-
-    subject: Yup.string().required("Subject is required"),
-
     message: Yup.string().required("Message is required"),
   });
   const [formData, setFormData] = useState({
@@ -75,7 +72,7 @@ const Contact = () => {
   };
 
   const handleSubmit = async (e) => {
-    console.log("Submitting form");
+    // console.log("Submitting form");
     e.preventDefault();
     setErrors({});
     setLoading(true);
