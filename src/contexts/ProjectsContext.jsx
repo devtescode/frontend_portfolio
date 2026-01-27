@@ -66,7 +66,7 @@ export const ProjectsProvider = ({ children }) => {
     updateProject,
     deleteProject,
     getProject,
-    latestProjects: projects.slice(0, 3), // First 3 latest projects
+    latestProjects: projects.slice(-3), // First 3 latest projects
   };
 
   return (

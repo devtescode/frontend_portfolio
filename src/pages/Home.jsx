@@ -41,8 +41,8 @@ const features = [
 ];
 
 const Home = () => {
-  const { featuredProjects } = useProjects();
-   const { latestProjects } = useProjects();
+ 
+   const { latestProjects } = useProjects(-3);
 
   return (
     <Layout>
@@ -114,7 +114,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Projects */}
       <section className="py-24">
         <div className="container mx-auto px-4">
           <SectionHeading

@@ -48,7 +48,6 @@ const ProjectCard = ({ project, className = '' }) => {
         </div>
       </div>
 
-      {/* Content */}
       <div className="p-6">
         <h3 className="text-xl font-bold font-display mb-2 group-hover:text-primary transition-colors">
           {title}
