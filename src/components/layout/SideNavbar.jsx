@@ -133,27 +133,7 @@ const SideNavbar = () => {
       {!isMobile && (
         <aside className="fixed top-0 left-0 h-full w-[72px] z-50">
           <div className="h-full bg-card/95 backdrop-blur-xl border-r border-border flex flex-col overflow-hidden">
-            {/* Logo */}
-            <div className="p-3 border-b border-border flex justify-center">
-              <Tooltip delayDuration={0}>
-                <TooltipTrigger asChild>
-                  <Link
-                    to="/"
-                    className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20"
-                  >
-                    <span className="text-xl font-bold text-white font-display">T</span>
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={12}>
-                  <div>
-                    <p className="font-bold">Tescode</p>
-                    <p className="text-xs text-muted-foreground">Portfolio 2026</p>
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-
-            {/* Navigation Links */}
+            
             <nav className="flex-1 py-4 px-3 flex flex-col items-center gap-2 overflow-hidden">
               {navLinks.map((link) => (
                 <NavItem
@@ -164,9 +144,7 @@ const SideNavbar = () => {
               ))}
             </nav>
 
-            {/* Bottom Section */}
             <div className="p-3 border-t border-border flex flex-col items-center gap-2 overflow-hidden">
-              {/* Theme Toggle */}
               <ActionButton
                 icon={isDark ? Sun : Moon}
                 label={isDark ? 'Light Mode' : 'Dark Mode'}
@@ -212,7 +190,7 @@ const SideNavbar = () => {
         >
           <div className="h-full bg-card/95 backdrop-blur-xl border-r border-border flex flex-col overflow-hidden">
             {/* Logo */}
-            <div className="p-3 border-b border-border flex justify-center">
+            {/* <div className="p-3 border-b border-border flex justify-center">
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
                   <Link
@@ -230,7 +208,7 @@ const SideNavbar = () => {
                   </div>
                 </TooltipContent>
               </Tooltip>
-            </div>
+            </div> */}
 
             {/* Navigation Links */}
             <nav className="flex-1 py-4 px-3 flex flex-col items-center gap-2 overflow-hidden">
