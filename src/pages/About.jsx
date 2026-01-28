@@ -20,10 +20,10 @@ const experiences = [
     description: 'Built CivicChoice, a secure web-based voting platform featuring real-time vote counting, authentication, and role-based access (admin/voter), designed with a responsive React frontend and a Node.js backend integrated with a database for seamless election management.',
   },
   {
-    title: 'Frontend Developer',
-    company: 'Startup',
-    period: '2022 - 2023',
-    description: 'Developed responsive user interfaces and optimized website performance, achieving a 40% improvement in load speed and user experience.',
+    title: 'Fullstack Developer',
+    // company: 'Startup',
+    period: 'SEPT 2022 - AUG 2024',
+    description: 'I enrolled in a tech school to enhance my skills as a Full-Stack Web Developer. During my studies, I gained hands-on experience with a variety of technologies, including Angular, React, Vue.js, Node.js, Express.js, MongoDB, SQL, and PHP. Beyond technical expertise, I honed my communication skills, learning to present ideas clearly and pitch solutions effectively. This experience has provided me with a strong, well-rounded foundation for success in the tech industry.',
   },
 ];
 
@@ -122,7 +122,7 @@ const About = () => {
                     <span className="text-primary font-medium">{exp.company}</span>
 
                     <div className="inline-block px-2 py-0 rounded-lg border border-border bg-white dark:bg-gray-100">
-                      <span className="text-primary font-medium">{exp.remote}</span>
+                      <span className="text-primary font-medium uppercase">{exp.remote}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground text-sm mb-3">
