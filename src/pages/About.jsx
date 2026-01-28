@@ -32,7 +32,7 @@ const education = [
     degree: ' SQI College of ICT',
     school: 'Coding School',
     period: '2022 - 2024',
-    description: 'Graduated with honors, focused on software engineering and web technologies.',
+    description: 'Graduated with honors in Software Engineering, with a strong focus on web development and modern software technologies.',
   },
 ];
 
