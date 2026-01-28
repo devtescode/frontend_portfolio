@@ -6,14 +6,16 @@ import Image from "../../public/portfolio.webp"
 
 const experiences = [
   {
-    title: 'Senior Full Stack Developer',
-    company: 'Sweet Delights, UK',
+    title: 'Full Stack Developer',
+    company: 'Sweet Delights',
+    remote: 'Remote',
     period: '2026 - Present',
     description: 'Web Developer at Sweet Delights, where I built a full-stack cake ordering and delivery platform. I implemented user authentication, product browsing, cart and checkout functionality, payment integration, and an order history system. I focused on responsive UI/UX, smooth navigation, and real-time interaction between users and the platform.',
   },
   {
     title: 'Full Stack Developer',
-    company: 'CivicChoice (Online Voting Platform)',
+    company: 'CivicChoice',
+    remote: 'Remote',
     period: '2023 - 2025',
     description: 'Built CivicChoice, a secure web-based voting platform featuring real-time vote counting, authentication, and role-based access (admin/voter), designed with a responsive React frontend and a Node.js backend integrated with a database for seamless election management.',
   },
@@ -76,13 +78,13 @@ const About = () => {
                 </div>
               </div>
               <p className="text-lg text-muted-foreground mb-6">
-                I'm a passionate full-stack developer with over 5 years of experience 
-                creating digital solutions that make a difference. I specialize in 
+                I'm a passionate full-stack developer with over 5 years of experience
+                creating digital solutions that make a difference. I specialize in
                 building scalable web applications with modern technologies.
               </p>
               <p className="text-lg text-muted-foreground mb-8">
-                My journey into tech started with a curiosity about how things work 
-                on the web. Today, I help businesses transform their ideas into 
+                My journey into tech started with a curiosity about how things work
+                on the web. Today, I help businesses transform their ideas into
                 reality through clean code and thoughtful design.
               </p>
               <Button className="gap-2 bg-gradient-to-r from-primary to-primary/80">
@@ -115,9 +117,13 @@ const About = () => {
                 <div className="absolute left-0 top-2 w-2 h-2 -translate-x-1/2 rounded-full bg-primary glow" />
 
                 <div className="glass-card p-6 rounded-2xl">
-                  <div className="flex flex-wrap items-center gap-4 mb-3">
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
                     <h3 className="text-xl font-bold font-display">{exp.title}</h3>
                     <span className="text-primary font-medium">{exp.company}</span>
+
+                    <div className="inline-block px-2 py-0 rounded-lg border border-border bg-white dark:bg-gray-100">
+                      <span className="text-primary font-medium">{exp.remote}</span>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground text-sm mb-3">
                     <Calendar className="w-4 h-4" />
