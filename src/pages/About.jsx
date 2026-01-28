@@ -1,8 +1,10 @@
-import { Download, MapPin, Calendar, Briefcase } from 'lucide-react';
+import { Download, MapPin, Briefcase, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Layout from '@/components/layout/Layout';
 import SectionHeading from '@/components/ui/SectionHeading';
 import Image from "../../public/portfolio.webp"
+import { CalendarIcon, MapPinIcon } from '@heroicons/react/24/solid';
+
 
 const experiences = [
   {
@@ -21,16 +23,17 @@ const experiences = [
   },
   {
     title: 'Fullstack Developer',
-    // company: 'Startup',
+    company: 'Startup',
     period: 'SEPT 2022 - AUG 2024',
     description: 'I enrolled in a tech school to enhance my skills as a Full-Stack Web Developer. During my studies, I gained hands-on experience with a variety of technologies, including Angular, React, Vue.js, Node.js, Express.js, MongoDB, SQL, and PHP. Beyond technical expertise, I honed my communication skills, learning to present ideas clearly and pitch solutions effectively. This experience has provided me with a strong, well-rounded foundation for success in the tech industry.',
   },
 ];
 
+
 const education = [
   {
     degree: ' SQI College of ICT',
-    school: 'Coding School',
+    school: 'Old Ilorin Road, Opposite Yoaco Filling Station, Yoaco, Ogbomoso',
     period: '2022 - 2024',
     description: 'Graduated with honors in Software Engineering, with a strong focus on web development and modern software technologies.',
   },
@@ -146,20 +149,43 @@ const About = () => {
           />
 
           <div className="max-w-3xl mx-auto">
+
             {education.map((edu, index) => (
               <div
                 key={index}
-                className="glass-card p-8 rounded-2xl fade-in"
+                className="glass-card p-6 rounded-2xl fade-in"
               >
-                <h3 className="text-xl font-bold font-display mb-2">{edu.degree}</h3>
-                <p className="text-primary font-medium mb-2">{edu.school}</p>
-                <div className="flex items-center gap-2 text-muted-foreground text-sm mb-4">
-                  <Calendar className="w-4 h-4" />
-                  {edu.period}
+                {/* Degree */}
+                <h3 className="text-lg font-bold font-display mb-1">{edu.degree}</h3>
+
+                
+                <div className="flex items-center gap-1 text-muted-foreground">
+                  <MapPinIcon className="w-3 h-3.5" />
+                  <p className="text-md font-medium mb-1 text-sm">{edu.school}</p>
                 </div>
-                <p className="text-muted-foreground">{edu.description}</p>
+
+                {/* Period & Location */}
+                <div className="flex items-center gap-4 text-muted-foreground text-sm mb-3">
+                  {/* Calendar */}
+                  <div className="flex items-center gap-1">
+                    <CalendarIcon className="w-3.5 h-3.5" />
+                    <span>{edu.period}</span>
+                  </div>
+
+                  {/* Location */}
+                  {edu.location && (
+                    <div className="flex items-center gap-1">
+                      <MapPinIcon className="w-3.5 h-3.5" />
+                      <span>{edu.location}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Description */}
+                <p className="text-sm text-muted-foreground">{edu.description}</p>
               </div>
             ))}
+
           </div>
         </div>
       </section>
