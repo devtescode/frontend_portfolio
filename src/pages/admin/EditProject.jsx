@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Save, X, Plus } from 'lucide-react';
+import { Save } from 'lucide-react';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { useProjects } from '@/contexts/ProjectsContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -15,86 +14,82 @@ const EditProject = () => {
   const navigate = useNavigate();
   const { getProject, updateProject } = useProjects();
   const { toast } = useToast();
+
   const [loading, setLoading] = useState(false);
-  const [techInput, setTechInput] = useState('');
   const [formData, setFormData] = useState({
-    title: '',
+    projectName: '',
     description: '',
-    image: '',
-    techStack: [],
-    liveUrl: '',
-    githubUrl: '',
-    featured: false,
+    url: '',
+    deployLink: '',
+    projectcode: '',
   });
 
+  // Load project data
   useEffect(() => {
     const project = getProject(id);
-    if (project) {
-      setFormData(project);
-    } else {
-      navigate('/admin/projects');
-    }
-  }, [id, getProject, navigate]);
 
+    if (project) {
+      setFormData({
+        projectName: project.projectName || '',
+        description: project.description || '',
+        url: project.url || '',
+        deployLink: project.deployLink || '',
+        projectcode: project.projectcode || '',
+      });
+    }
+  }, [id, getProject]);
+
+  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleAddTech = () => {
-    if (techInput.trim() && !formData.techStack.includes(techInput.trim())) {
-      setFormData((prev) => ({
-        ...prev,
-        techStack: [...prev.techStack, techInput.trim()],
-      }));
-      setTechInput('');
-    }
-  };
-
-  const handleRemoveTech = (tech) => {
     setFormData((prev) => ({
       ...prev,
-      techStack: prev.techStack.filter((t) => t !== tech),
+      [name]: value,
     }));
   };
 
+  // Submit update
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      updateProject(id, formData);
+      await updateProject(id, formData);
+
       toast({
         title: 'Project updated!',
         description: 'Your changes have been saved successfully.',
       });
+
       navigate('/admin/projects');
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Failed to update project. Please try again.',
+        description: 'Failed to update project.',
         variant: 'destructive',
       });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <AdminLayout>
       <div className="max-w-2xl">
-        <h1 className="text-2xl font-bold font-display mb-6">Edit Project</h1>
+        <h1 className="text-2xl font-bold font-display mb-6">
+          Edit Project
+        </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="glass-card p-6 rounded-2xl space-y-6">
-            {/* Title */}
+            {/* Project Name */}
             <div className="space-y-2">
-              <Label htmlFor="title">Project Title *</Label>
+              <Label htmlFor="projectName">Project Name *</Label>
               <Input
-                id="title"
-                name="title"
+                id="projectName"
+                name="projectName"
                 placeholder="My Awesome Project"
-                value={formData.title}
+                value={formData.projectName}
                 onChange={handleChange}
                 required
                 className="bg-background/50"
@@ -118,28 +113,95 @@ const EditProject = () => {
 
             {/* Image URL */}
             <div className="space-y-2">
-              <Label htmlFor="image">Image URL *</Label>
+              <Label htmlFor="url">Image URL *</Label>
               <Input
-                id="image"
-                name="image"
+                id="url"
+                name="url"
                 placeholder="https://example.com/image.jpg"
-                value={formData.image}
+                value={formData.url}
                 onChange={handleChange}
                 required
                 className="bg-background/50"
               />
-              {formData.image && (
+
+              {formData.url && (
                 <img
-                  src={formData.image}
+                  src={formData.url}
                   alt="Preview"
                   className="mt-2 h-32 w-full object-cover rounded-lg"
-                  onError={(e) => (e.target.style.display = 'none')}
+                  onError={(e) => (e.currentTarget.style.display = 'none')}
                 />
               )}
             </div>
 
-            {/* Tech Stack */}
-            <div className="space-y-2">
+            {/* Links */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="deployLink">Live URL</Label>
+                <Input
+                  id="deployLink"
+                  name="deployLink"
+                  placeholder="https://myproject.com"
+                  value={formData.deployLink}
+                  onChange={handleChange}
+                  className="bg-background/50"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="projectcode">GitHub URL</Label>
+                <Input
+                  id="projectcode"
+                  name="projectcode"
+                  placeholder="https://github.com/..."
+                  value={formData.projectcode}
+                  onChange={handleChange}
+                  className="bg-background/50"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-4">
+            <Button
+              type="submit"
+              className="gap-2 bg-gradient-to-r from-primary to-primary/80"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  Save Changes
+                </>
+              )}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate('/admin/projects')}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </div>
+    </AdminLayout>
+  );
+};
+
+export default EditProject;
+
+
+
+
+{/* <div className="space-y-2">
               <Label>Tech Stack</Label>
               <div className="flex gap-2">
                 <Input
@@ -172,85 +234,4 @@ const EditProject = () => {
                   ))}
                 </div>
               )}
-            </div>
-
-            {/* URLs */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="liveUrl">Live URL</Label>
-                <Input
-                  id="liveUrl"
-                  name="liveUrl"
-                  placeholder="https://myproject.com"
-                  value={formData.liveUrl}
-                  onChange={handleChange}
-                  className="bg-background/50"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="githubUrl">GitHub URL</Label>
-                <Input
-                  id="githubUrl"
-                  name="githubUrl"
-                  placeholder="https://github.com/..."
-                  value={formData.githubUrl}
-                  onChange={handleChange}
-                  className="bg-background/50"
-                />
-              </div>
-            </div>
-
-            {/* Featured */}
-            <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50">
-              <div>
-                <Label htmlFor="featured" className="font-medium">
-                  Featured Project
-                </Label>
-                <p className="text-sm text-muted-foreground">
-                  Show this project on the homepage
-                </p>
-              </div>
-              <Switch
-                id="featured"
-                checked={formData.featured}
-                onCheckedChange={(checked) =>
-                  setFormData((prev) => ({ ...prev, featured: checked }))
-                }
-              />
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex gap-4">
-            <Button
-              type="submit"
-              className="gap-2 bg-gradient-to-r from-primary to-primary/80"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="w-4 h-4" />
-                  Save Changes
-                </>
-              )}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => navigate('/admin/projects')}
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
-      </div>
-    </AdminLayout>
-  );
-};
-
-export default EditProject;
+            </div> */}

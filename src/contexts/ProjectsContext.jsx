@@ -39,18 +39,18 @@ export const ProjectsProvider = ({ children }) => {
   // };
 
   const deleteProject = async (id) => {
-  try {
-    await axios.delete(API_URLS.delectprojects(id));
+    try {
+      await axios.delete(API_URLS.delectprojects(id));
 
-    // Remove project from UI after successful delete
-    setProjects((prevProjects) =>
-      prevProjects.filter((project) => project._id !== id)
-    );
-  } catch (error) {
-    console.error("Error deleting project:", error);
-    alert("Failed to delete project");
-  }
-};
+      // Remove project from UI after successful delete
+      setProjects((prevProjects) =>
+        prevProjects.filter((project) => project._id !== id)
+      );
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      alert("Failed to delete project");
+    }
+  };
 
   // Add project locally (after upload)
   // const addProject = (project) => {
@@ -63,12 +63,54 @@ export const ProjectsProvider = ({ children }) => {
   //   return newProject;
   // };
 
-  // const updateProject = (id, updatedData) => {
-  //   const updated = projects.map((p) =>
-  //     p._id === id || p.id === id ? { ...p, ...updatedData } : p
+
+  // const updateProject = async (id, updatedData) => {
+  //   const res = await axios.put(
+  //     API_URLS.editprojects({ _id: id }),
+  //     {
+  //       projectName: data.projectName,
+  //       description: data.description,
+  //       url: data.url,
+  //       deployLink: data.deployLink,
+  //       projectcode: data.projectcode,
+  //     }
   //   );
-  //   setProjects(updated);
+
+  //   setProjects((prev) =>
+  //     prev.map((p) => (p._id === id ? res.data : p))
+  //   );
+
+  //   return res.data;
   // };
+
+
+
+
+  const updateProject = async (id, data) => {
+  try {
+    const res = await axios.put(API_URLS.editprojects(id), {
+      projectName: data.projectName,
+      description: data.description,
+      url: data.url,
+      deployLink: data.deployLink,
+      projectcode: data.projectcode,
+    });
+
+    // Update local state
+    setProjects((prev) =>
+      prev.map((p) => (p._id === id ? res.data : p))
+    );
+
+    return res.data;
+  } catch (error) {
+    console.error('Error updating project:', error);
+    console.log('Error updating project:', error);
+    throw error;
+  }
+};
+
+
+
 
 
 
@@ -76,12 +118,18 @@ export const ProjectsProvider = ({ children }) => {
   //   return projects.find((p) => p._id === id || p.id === id);
   // };
 
+  const getProject = (id) => {
+    if (!projects || projects.length === 0) return null;
+    return projects.find((p) => p._id === id);
+  };
+
+
   const value = {
     projects,
     // addProject,
-    // updateProject,
+    updateProject,
     deleteProject,
-    // getProject,
+    getProject,
     latestProjects: projects.slice(-3), // First 3 latest projects
   };
 
