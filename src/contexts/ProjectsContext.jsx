@@ -21,7 +21,6 @@ export const ProjectsProvider = ({ children }) => {
       const res = await axios.get(API_URLS.getprojects); // Your backend URL
       const data = res.data;
 
-      // Sort by newest first (assuming _id creation time or timestamp)
       const sorted = data.sort((a, b) => new Date(b.createdAt || b._id) - new Date(a.createdAt || a._id));
       setProjects(sorted);
     } catch (error) {
@@ -33,39 +32,56 @@ export const ProjectsProvider = ({ children }) => {
     fetchProjects();
   }, []);
 
-  // Add project locally (after upload)
-  const addProject = (project) => {
-    const newProject = {
-      ...project,
-      id: Date.now().toString(),
-    };
-    const updated = [newProject, ...projects]; // Add to the top
-    setProjects(updated);
-    return newProject;
-  };
 
-  const updateProject = (id, updatedData) => {
-    const updated = projects.map((p) =>
-      p._id === id || p.id === id ? { ...p, ...updatedData } : p
+  // const deleteProject = (id) => {
+  //   const updated = projects.filter((p) => p._id !== id && p.id !== id);
+  //   setProjects(updated);
+  // };
+
+  const deleteProject = async (id) => {
+  try {
+    await axios.delete(API_URLS.delectprojects(id));
+
+    // Remove project from UI after successful delete
+    setProjects((prevProjects) =>
+      prevProjects.filter((project) => project._id !== id)
     );
-    setProjects(updated);
-  };
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    alert("Failed to delete project");
+  }
+};
 
-  const deleteProject = (id) => {
-    const updated = projects.filter((p) => p._id !== id && p.id !== id);
-    setProjects(updated);
-  };
+  // Add project locally (after upload)
+  // const addProject = (project) => {
+  //   const newProject = {
+  //     ...project,
+  //     id: Date.now().toString(),
+  //   };
+  //   const updated = [newProject, ...projects]; // Add to the top
+  //   setProjects(updated);
+  //   return newProject;
+  // };
 
-  const getProject = (id) => {
-    return projects.find((p) => p._id === id || p.id === id);
-  };
+  // const updateProject = (id, updatedData) => {
+  //   const updated = projects.map((p) =>
+  //     p._id === id || p.id === id ? { ...p, ...updatedData } : p
+  //   );
+  //   setProjects(updated);
+  // };
+
+
+
+  // const getProject = (id) => {
+  //   return projects.find((p) => p._id === id || p.id === id);
+  // };
 
   const value = {
     projects,
-    addProject,
-    updateProject,
+    // addProject,
+    // updateProject,
     deleteProject,
-    getProject,
+    // getProject,
     latestProjects: projects.slice(-3), // First 3 latest projects
   };
 

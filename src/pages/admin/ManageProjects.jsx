@@ -18,6 +18,7 @@ import {
 
 const ManageProjects = () => {
   const { projects, deleteProject } = useProjects();
+  // console.log('Projects in ManageProjects:', deleteProject);
   const { toast } = useToast();
   const [deleteId, setDeleteId] = useState(null);
 
@@ -56,14 +57,14 @@ const ManageProjects = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project) => (
               <div
-                key={project.id}
+                key={project._id}
                 className="glass-card rounded-2xl overflow-hidden group"
               >
                 {/* Image */}
                 <div className="relative aspect-video">
                   <img
-                    src={project.image}
-                    alt={project.title}
+                    src={project.url}
+                    alt={project.projectName}
                     className="w-full h-full object-cover"
                   />
                   {project.featured && (
@@ -77,7 +78,7 @@ const ManageProjects = () => {
                 {/* Content */}
                 <div className="p-4">
                   <h3 className="font-bold font-display mb-1 truncate">
-                    {project.title}
+                    {project.projectName}
                   </h3>
                   <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
                     {project.description}
@@ -108,7 +109,7 @@ const ManageProjects = () => {
                       size="sm"
                       className="flex-1"
                     >
-                      <Link to={`/admin/edit-project/${project.id}`}>
+                      <Link to={`/admin/edit-project/${project._id}`}>
                         <Pencil className="w-4 h-4 mr-1" />
                         Edit
                       </Link>
@@ -117,7 +118,7 @@ const ManageProjects = () => {
                       variant="outline"
                       size="sm"
                       className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                      onClick={() => setDeleteId(project.id)}
+                      onClick={() => setDeleteId(project._id)}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
