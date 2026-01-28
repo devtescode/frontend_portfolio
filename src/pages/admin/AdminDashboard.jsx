@@ -77,18 +77,18 @@ const AdminDashboard = () => {
           <CardContent>
             {projects.length > 0 ? (
               <div className="space-y-4">
-                {projects.slice(0, 5).map((project) => (
+                {projects.slice(-5).map((project) => (
                   <div
                     key={project.id}
                     className="flex items-center gap-4 p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
                   >
                     <img
-                      src={project.image}
-                      alt={project.title}
+                      src={project.url}
+                      alt={project.projectName}
                       className="w-16 h-12 rounded-lg object-cover"
                     />
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium truncate">{project.title}</h4>
+                      <h4 className="font-medium truncate">{project.projectName}</h4>
                       <p className="text-sm text-muted-foreground truncate">
                         {project.techStack?.join(', ')}
                       </p>
