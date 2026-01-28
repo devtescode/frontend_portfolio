@@ -8,6 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useProjects } from '@/contexts/ProjectsContext';
 import { useToast } from '@/hooks/use-toast';
+import axios from 'axios';
+import { API_URLS } from '../../components/utils/apiConfig';
 
 const EditProject = () => {
   const { id } = useParams();
@@ -16,6 +18,7 @@ const EditProject = () => {
   const { toast } = useToast();
 
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     projectName: '',
     description: '',
@@ -27,7 +30,6 @@ const EditProject = () => {
   // Load project data
   useEffect(() => {
     const project = getProject(id);
-
     if (project) {
       setFormData({
         projectName: project.projectName || '',
@@ -42,10 +44,32 @@ const EditProject = () => {
   // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle file input
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+
+    const formDataUpload = new FormData();
+    formDataUpload.append('image', file);
+
+    try {
+      const res = await axios.put(API_URLS.uploadimage(id), formDataUpload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      setFormData((prev) => ({ ...prev, url: res.data.url }));
+      toast({ title: 'Image uploaded!', description: 'Preview updated.' });
+    } catch (error) {
+      console.error('Upload failed', error);
+      toast({ title: 'Error', description: 'Image upload failed.', variant: 'destructive' });
+    } finally {
+      setUploading(false);
+    }
   };
 
   // Submit update
@@ -55,12 +79,10 @@ const EditProject = () => {
 
     try {
       await updateProject(id, formData);
-
       toast({
         title: 'Project updated!',
         description: 'Your changes have been saved successfully.',
       });
-
       navigate('/admin/projects');
     } catch (error) {
       toast({
@@ -76,9 +98,7 @@ const EditProject = () => {
   return (
     <AdminLayout>
       <div className="max-w-2xl">
-        <h1 className="text-2xl font-bold font-display mb-6">
-          Edit Project
-        </h1>
+        <h1 className="text-2xl font-bold font-display mb-6">Edit Project</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="glass-card p-6 rounded-2xl space-y-6">
@@ -111,20 +131,20 @@ const EditProject = () => {
               />
             </div>
 
-            {/* Image URL */}
+            {/* Image Upload */}
             <div className="space-y-2">
-              <Label htmlFor="url">Image URL *</Label>
+              <Label htmlFor="url">Project Image *</Label>
               <Input
                 id="url"
                 name="url"
-                placeholder="https://example.com/image.jpg"
-                value={formData.url}
-                onChange={handleChange}
-                required
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
                 className="bg-background/50"
               />
+              {uploading && <p className="text-sm text-muted-foreground">Uploading...</p>}
 
-              {formData.url && (
+              {formData.url && !uploading && (
                 <img
                   src={formData.url}
                   alt="Preview"
@@ -167,7 +187,7 @@ const EditProject = () => {
             <Button
               type="submit"
               className="gap-2 bg-gradient-to-r from-primary to-primary/80"
-              disabled={loading}
+              disabled={loading || uploading}
             >
               {loading ? (
                 <>
@@ -197,6 +217,7 @@ const EditProject = () => {
 };
 
 export default EditProject;
+
 
 
 
