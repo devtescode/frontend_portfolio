@@ -158,11 +158,12 @@ const About = () => {
                 {/* Degree */}
                 <h3 className="text-lg font-bold font-display mb-1">{edu.degree}</h3>
 
-                
+
                 <div className="flex items-center gap-1 text-muted-foreground">
-                  <MapPinIcon className="w-3 h-3.5" />
-                  <p className="text-md font-medium mb-1 text-sm">{edu.school}</p>
+                  <MapPinIcon className="w-4 h-4" /> {/* make icon size match text height */}
+                  <span className="text-sm font-medium">{edu.school}</span>
                 </div>
+
 
                 {/* Period & Location */}
                 <div className="flex items-center gap-4 text-muted-foreground text-sm mb-3">
