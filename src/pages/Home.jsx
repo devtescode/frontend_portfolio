@@ -173,11 +173,11 @@ const Home = () => {
       {/* CTA Section */}
       <section className="py-5">
         <div className="container mx-auto px-1">
-          <div className="glass-card rounded-3xl p-1 py-10 md:p-16 text-center relative overflow-hidden">
+          <div className="glass-card rounded-3xl p-1 py-10 md:p-10 text-center relative overflow-hidden">
             {/* Background Glow */}
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-accent/20 pointer-events-none" />
 
-            <h2 className="text-3xl md:text-5xl font-bold font-display mb-6 relative">
+            <h2 className="text-3xl md:text-5xl font-bold font-display mb-4 relative">
               Let's Build Something{' '}
               <span className="gradient-text">Amazing</span>
             </h2>
