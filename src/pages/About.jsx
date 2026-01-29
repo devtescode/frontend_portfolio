@@ -80,12 +80,12 @@ const About = () => {
                   Full Stack Developer
                 </div>
               </div>
-              <p className="text-lg text-muted-foreground mb-6">
+              <p className="text-lg text-muted-foreground mb-6 text-justify">
                 I'm a passionate full-stack developer with over 5 years of experience
                 creating digital solutions that make a difference. I specialize in
                 building scalable web applications with modern technologies.
               </p>
-              <p className="text-lg text-muted-foreground mb-8">
+              <p className="text-lg text-muted-foreground mb-8 text-justify">
                 My journey into tech started with a curiosity about how things work
                 on the web. Today, I help businesses transform their ideas into
                 reality through clean code and thoughtful design.
