@@ -43,61 +43,80 @@ const About = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="py-24">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Image */}
-            <div className="relative fade-in">
-              <div className="aspect-square max-w-md mx-auto lg:mx-0 relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent rounded-3xl transform rotate-6 opacity-20" />
-                <div className="relative bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl overflow-hidden border border-white/10">
-                  <img
-                    src={Image}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                {/* Floating Badge */}
-                <div className="absolute -bottom-4 -right-4 glass-card px-6 py-3 rounded-xl">
-                  <p className="text-sm text-muted-foreground">Experience</p>
-                  <p className="text-2xl font-bold gradient-text">5+ Years</p>
-                </div>
-              </div>
-            </div>
+      <section className="py-16 sm:py-20 lg:py-24">
+  <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+      
+      {/* Image */}
+      <div className="relative fade-in flex justify-center lg:justify-start">
+        <div className="aspect-square w-full max-w-xs sm:max-w-sm md:max-w-md relative">
+          
+          {/* Background glow */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent rounded-3xl rotate-6 opacity-20" />
 
-            {/* Content */}
-            <div className="fade-in" style={{ animationDelay: '0.2s' }}>
-              <h1 className="text-4xl md:text-5xl font-bold font-display mb-6">
-                About <span className="gradient-text">Me</span>
-              </h1>
-              <div className="flex flex-wrap gap-4 mb-6">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <MapPin className="w-4 h-4 text-primary" />
-                  Ogbomosho, Nigeria
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Briefcase className="w-4 h-4 text-primary" />
-                  Full Stack Developer
-                </div>
-              </div>
-              <p className="text-lg text-muted-foreground mb-6 text-justify">
-                I'm a passionate full-stack developer with over 5 years of experience
-                creating digital solutions that make a difference. I specialize in
-                building scalable web applications with modern technologies.
-              </p>
-              <p className="text-lg text-muted-foreground mb-8 text-justify">
-                My journey into tech started with a curiosity about how things work
-                on the web. Today, I help businesses transform their ideas into
-                reality through clean code and thoughtful design.
-              </p>
-              <Button className="gap-2 bg-gradient-to-r from-primary to-primary/80">
-                <Download className="w-4 h-4" />
-                Download CV
-              </Button>
-            </div>
+          {/* Image container */}
+          <div className="relative bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl overflow-hidden border border-white/10">
+            <img
+              src={Image}
+              alt="Profile"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          {/* Floating Badge */}
+          <div className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 glass-card px-4 sm:px-6 py-2 sm:py-3 rounded-xl">
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              Experience
+            </p>
+            <p className="text-xl sm:text-2xl font-bold gradient-text">
+              5+ Years
+            </p>
           </div>
         </div>
-      </section>
+      </div>
+
+      {/* Content */}
+      <div className="fade-in text-center lg:text-left" style={{ animationDelay: '0.2s' }}>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display mb-6">
+          About <span className="gradient-text">Me</span>
+        </h1>
+
+        {/* Meta info */}
+        <div className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-4 mb-6">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <MapPin className="w-4 h-4 text-primary" />
+            Ogbomosho, Nigeria
+          </div>
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Briefcase className="w-4 h-4 text-primary" />
+            Full Stack Developer
+          </div>
+        </div>
+
+        {/* Text */}
+        <p className="text-base sm:text-lg text-muted-foreground mb-6 text-left md:text-justify">
+          I'm a passionate full-stack developer with over 5 years of experience
+          creating digital solutions that make a difference. I specialize in
+          building scalable web applications with modern technologies.
+        </p>
+
+        <p className="text-base sm:text-lg text-muted-foreground mb-8 text-left md:text-justify">
+          My journey into tech started with a curiosity about how things work
+          on the web. Today, I help businesses transform their ideas into
+          reality through clean code and thoughtful design.
+        </p>
+
+        {/* Button */}
+        <div className="flex justify-center lg:justify-start">
+          <Button className="gap-2 bg-gradient-to-r from-primary to-primary/80">
+            <Download className="w-4 h-4" />
+            Download CV
+          </Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* Experience Section */}
       <section className="py-24 bg-card/30">
