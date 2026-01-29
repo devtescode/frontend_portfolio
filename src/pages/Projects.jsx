@@ -9,7 +9,7 @@ const Projects = () => {
 
   return (
     <Layout>
-      <section className="py-24">
+      <section className="py-10">
         <div className="container mx-auto px-4">
           <SectionHeading
             title={<>My <span className="gradient-text">Projects</span></>}
