@@ -92,7 +92,7 @@ const About = () => {
               </p>
               <Button className="gap-2 bg-gradient-to-r from-primary to-primary/80">
                 <Download className="w-4 h-4" />
-                Download Resume
+                Download CV
               </Button>
             </div>
           </div>
