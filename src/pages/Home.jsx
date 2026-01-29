@@ -47,7 +47,7 @@ const Home = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="min-h-[80vh] flex items-center relative overflow-hidden">
+      <section className="min-h-[90vh] flex items-center relative overflow-hidden">
         <div className="container mx-auto px-4 py-10">
           <div className="max-w-4xl mx-auto text-center">
             {/* Badge */}
