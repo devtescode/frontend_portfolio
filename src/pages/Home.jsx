@@ -171,9 +171,9 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24">
-        <div className="container mx-auto px-4">
-          <div className="glass-card rounded-3xl p-12 md:p-16 text-center relative overflow-hidden">
+      <section className="py-5">
+        <div className="container mx-auto px-1">
+          <div className="glass-card rounded-3xl p-1 py-10 md:p-16 text-center relative overflow-hidden">
             {/* Background Glow */}
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-accent/20 pointer-events-none" />
 
@@ -181,7 +181,7 @@ const Home = () => {
               Let's Build Something{' '}
               <span className="gradient-text">Amazing</span>
             </h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto relative">
+            <p className=" text-xl text-muted-foreground mb-8 max-w-2xl mx-auto relative">
               Have a project in mind? I'd love to hear about it. Let's work together
               to create something extraordinary.
             </p>
