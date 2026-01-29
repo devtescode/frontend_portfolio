@@ -67,7 +67,7 @@ const Home = () => {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto fade-in" style={{ animationDelay: '0.2s' }}>
+            <p className="text-xl text-muted-foreground mb-8 mx-auto fade-in" style={{ animationDelay: '0.2s' }}>
               I’m <span className="text-black dark:text-white font-semibold">Agboola Teslim</span>, a Full-Stack Engineer focused on building modern, scalable, and high-performance web applications. I turn complex ideas into clean, reliable solutions with strong architecture and great user experience.
             </p>
 
