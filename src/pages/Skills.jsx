@@ -64,14 +64,15 @@ const Skills = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="py-24">
+
+       <section className="py-0 mt-10">
         <div className="container mx-auto px-4">
           <SectionHeading
             title={<>My <span className="gradient-text">Skills</span></>}
             subtitle="A comprehensive overview of my technical skills and expertise across different areas of development."
           />
         </div>
-      </section>
+      </section>     
 
       {/* Skills by Category */}
       {skillCategories.map((category, categoryIndex) => (
