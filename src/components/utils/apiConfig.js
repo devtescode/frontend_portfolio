@@ -1,6 +1,6 @@
 
 import { baseURL } from "./config";
-console.log('Base URL:', baseURL)
+// console.log('Base URL:', baseURL)
 
 export const API_URLS = {
     adminlogin: `${baseURL}/portfolio/login`,
