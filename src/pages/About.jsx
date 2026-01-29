@@ -160,7 +160,7 @@ const About = () => {
       </section>
 
       {/* Education Section */}
-      <section className="py-24">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <SectionHeading
             title="Education"

@@ -1,7 +1,7 @@
 const SectionHeading = ({ title, subtitle, centered = true, className = '' }) => {
   return (
     <div className={`mb-12 ${centered ? 'text-center' : ''} ${className}`}>
-      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-display mb-4">
+      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-display mb-2">
         {title}
       </h2>
       {subtitle && (
