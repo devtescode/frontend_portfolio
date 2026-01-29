@@ -166,7 +166,6 @@ const About = () => {
             title="Education"
             subtitle="My academic background and qualifications."
           />
-
           <div className="max-w-3xl mx-auto">
 
             {education.map((edu, index) => (
