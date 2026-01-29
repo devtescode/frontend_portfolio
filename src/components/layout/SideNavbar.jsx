@@ -249,7 +249,7 @@ const SideNavbar = () => {
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="right" sideOffset={12} className="font-medium">
-                  Download Resume
+                  Download CV
                 </TooltipContent>
               </Tooltip>
             </div>
