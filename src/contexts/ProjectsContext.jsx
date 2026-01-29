@@ -14,10 +14,12 @@ export const useProjects = () => {
 
 export const ProjectsProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Fetch projects from backend
   const fetchProjects = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(API_URLS.getprojects); // Your backend URL
       const data = res.data;
 
@@ -25,6 +27,9 @@ export const ProjectsProvider = ({ children }) => {
       setProjects(sorted);
     } catch (error) {
       console.error('Failed to fetch projects:', error);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -87,27 +92,27 @@ export const ProjectsProvider = ({ children }) => {
 
 
   const updateProject = async (id, data) => {
-  try {
-    const res = await axios.put(API_URLS.editprojects(id), {
-      projectName: data.projectName,
-      description: data.description,
-      url: data.url,
-      deployLink: data.deployLink,
-      projectcode: data.projectcode,
-    });
+    try {
+      const res = await axios.put(API_URLS.editprojects(id), {
+        projectName: data.projectName,
+        description: data.description,
+        url: data.url,
+        deployLink: data.deployLink,
+        projectcode: data.projectcode,
+      });
 
-    // Update local state
-    setProjects((prev) =>
-      prev.map((p) => (p._id === id ? res.data : p))
-    );
+      // Update local state
+      setProjects((prev) =>
+        prev.map((p) => (p._id === id ? res.data : p))
+      );
 
-    return res.data;
-  } catch (error) {
-    console.error('Error updating project:', error);
-    console.log('Error updating project:', error);
-    throw error;
-  }
-};
+      return res.data;
+    } catch (error) {
+      console.error('Error updating project:', error);
+      console.log('Error updating project:', error);
+      throw error;
+    }
+  };
 
 
 
@@ -127,6 +132,7 @@ export const ProjectsProvider = ({ children }) => {
   const value = {
     projects,
     // addProject,
+    loading,
     updateProject,
     deleteProject,
     getProject,

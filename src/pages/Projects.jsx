@@ -4,8 +4,8 @@ import ProjectCard from '@/components/ui/ProjectCard';
 import { useProjects } from '@/contexts/ProjectsContext';
 
 const Projects = () => {
-  const { projects } = useProjects();
-  
+  const { projects, loading } = useProjects();
+
 
   return (
     <Layout>
@@ -16,25 +16,39 @@ const Projects = () => {
             subtitle="A collection of my work showcasing my skills in design, development, and problem-solving."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <div
-                key={project.id}
-                className="fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <ProjectCard project={project} />
-              </div>
-            ))}
-          </div>
+          {/* Loading */}
+          {loading && (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground text-lg">
+                Loading projects...
+              </p>
+            </div>
+          )}
 
-          {projects.length === 0 && (
+          {/* Projects */}
+          {!loading && projects.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projects.map((project, index) => (
+                <div
+                  key={project.id}
+                  className="fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <ProjectCard project={project} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* No projects */}
+          {!loading && projects.length === 0 && (
             <div className="text-center py-20">
               <p className="text-muted-foreground text-lg">
                 No projects yet. Check back soon!
               </p>
             </div>
           )}
+
         </div>
       </section>
     </Layout>
