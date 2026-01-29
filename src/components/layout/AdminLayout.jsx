@@ -29,6 +29,7 @@ const AdminLayout = ({ children }) => {
   const handleLogout = () => {
     logout();
     navigate('/admin/login');
+    localStorage.removeItem('token');
   };
 
   return (
