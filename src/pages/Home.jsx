@@ -90,11 +90,12 @@ const Home = () => {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-9 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex justify-center pt-2">
-            <div className="w-1 h-3 bg-primary rounded-full animate-pulse" />
-          </div>
-        </div>
+       <div className="absolute inset-x-0 bottom-9 flex justify-center animate-bounce">
+  <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex justify-center pt-2">
+    <div className="w-1 h-3 bg-primary rounded-full animate-pulse" />
+  </div>
+</div>
+
       </section>
 
       {/* Tech Stack Strip */}
