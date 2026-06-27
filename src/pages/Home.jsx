@@ -18,75 +18,145 @@ const techStack = [
 ];
 
 const features = [
-  { icon: Zap, title: 'Lightning Fast', description: 'Optimized performance with modern build tools and best practices.' },
-  { icon: Palette, title: 'Beautiful Design', description: 'Clean, modern UI/UX that delights users and drives engagement.' },
-  { icon: Code2, title: 'Clean Code', description: 'Maintainable, scalable code following industry best practices.' },
-  { icon: Shield, title: 'Secure & Reliable', description: 'Enterprise-grade security with robust error handling.' },
+  {
+    icon: Zap,
+    title: 'Lightning Fast',
+    description: 'Optimized performance with modern build tools and best practices.',
+  },
+  {
+    icon: Palette,
+    title: 'Beautiful Design',
+    description: 'Clean, modern UI/UX that delights users and drives engagement.',
+  },
+  {
+    icon: Code2,
+    title: 'Clean Code',
+    description: 'Maintainable, scalable code following industry best practices.',
+  },
+  {
+    icon: Shield,
+    title: 'Secure & Reliable',
+    description: 'Enterprise-grade security with robust error handling.',
+  },
 ];
 
-const Home = () => {
-  const { latestProjects, loading } = useProjects();
+// Custom Spinner Component with enhanced design
+const LoadingSpinner = () => (
+  <div className="flex flex-col items-center justify-center py-20 gap-6">
+    <div className="relative">
+      {/* Outer ring with gradient */}
+      <div className="w-16 h-16 rounded-full border-4 border-primary/20 border-t-primary animate-spin"></div>
+      
+      {/* Inner pulsing dot */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="w-3 h-3 bg-primary rounded-full animate-ping"></div>
+      </div>
+      
+      {/* Secondary spinning ring */}
+      <div className="absolute top-0 left-0 w-16 h-16 rounded-full border-4 border-transparent border-b-accent/50 animate-spin-slow"></div>
+    </div>
+    
+    <div className="flex flex-col items-center gap-2">
+      <p className="text-lg font-medium text-foreground">Loading Projects</p>
+      <div className="flex gap-1">
+        <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+        <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+        <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+      </div>
+    </div>
+  </div>
+);
 
-  const hasEnoughProjects = latestProjects && latestProjects.length >= 3;
+const Home = () => {
+  const { latestProjects, isLoading } = useProjects(-3);
+
+  // Check if we have exactly 3 projects displayed
+  const hasThreeProjects = latestProjects.length === 3;
+  const shouldShowViewAll = hasThreeProjects;
 
   return (
     <Layout>
       {/* Hero Section */}
       <section className="min-h-[90vh] flex items-center relative overflow-hidden">
-        <div className="container mx-auto px-4 py-20 text-center max-w-4xl">
+        <div className="container mx-auto px-4 py-20">
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary mb-8 animate-fade-in uppercase font-medium text-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary "></span>
+              </span>
+              Available for new opportunities
+            </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-display mb-6 leading-tight">
-            I Build <span className="gradient-text">Digital Experiences</span> That Matter
-          </h1>
+            {/* Heading */}
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-display mb-6 leading-tight fade-in" style={{ animationDelay: '0.1s' }}>
+              I Build{' '}
+              <span className="gradient-text">Digital Experiences</span>
+              {' '}That Matter
+            </h1>
 
-          <p className="text-xl text-muted-foreground mb-8">
-            I’m <span className="font-semibold">Teslim Agboola</span>, a Full-Stack Engineer building scalable web apps.
-          </p>
+            {/* Subtitle */}
+            <p className="text-xl text-muted-foreground mb-8 mx-auto fade-in" style={{ animationDelay: '0.2s' }}>
+              I'm <span className="text-black dark:text-white font-semibold">Teslim Agboola</span>, a Full-Stack Engineer focused on building modern, scalable, and high-performance web applications. I turn complex ideas into clean, reliable solutions with strong architecture and great user experience.
+            </p>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-3">
-            <Button asChild size="lg">
-              <Link to="/projects">View My Work <ArrowRight /></Link>
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link to="/contact">Get In Touch</Link>
-            </Button>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in" style={{ animationDelay: '0.3s' }}>
+              <Button asChild size="lg" className="gap-2 text-lg px-8 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
+                <Link to="/projects">
+                  View My Work
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="gap-2 text-lg px-8 glass-button">
+                <Link to="/contact">
+                  Get In Touch
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute inset-x-0 bottom-9 flex justify-center animate-bounce">
+          <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex justify-center pt-2">
+            <div className="w-1 h-3 bg-primary rounded-full animate-pulse" />
           </div>
         </div>
       </section>
 
-      {/* Tech Stack */}
-      <section className="py-12 border-y">
-        <div className="container mx-auto px-4 flex flex-wrap justify-center gap-8">
-          {techStack.map(t => (
-            <div key={t.name} className="flex items-center gap-2">
-              <span>{t.icon}</span>
-              <span>{t.name}</span>
-            </div>
-          ))}
+      {/* Tech Stack Strip */}
+      <section className="py-12 border-y border-border/50 bg-card/30">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+            {techStack.map((tech) => (
+              <div
+                key={tech.name}
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <span className="text-2xl">{tech.icon}</span>
+                <span className="font-medium">{tech.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Projects */}
       <section className="py-24">
         <div className="container mx-auto px-4">
           <SectionHeading
             title="Featured Projects"
-            subtitle="A selection of my best work."
+            subtitle="A selection of my best work showcasing my skills in design and development."
           />
 
-          {/* LOADING STATE */}
-          {loading && (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-10 h-10 border-4 border-gray-300 border-t-primary rounded-full animate-spin"></div>
-              <p className="mt-4 text-muted-foreground">Loading projects...</p>
-            </div>
-          )}
-
-          {/* PROJECTS GRID (ONLY IF >= 3) */}
-          {!loading && hasEnoughProjects && (
+          {/* Loader Spinner - Show while loading */}
+          {isLoading ? (
+            <LoadingSpinner />
+          ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {latestProjects.slice(0, 3).map((project, index) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {latestProjects.map((project, index) => (
                   <div
                     key={project._id || project.id}
                     className="fade-in"
@@ -97,22 +167,18 @@ const Home = () => {
                 ))}
               </div>
 
-              {/* VIEW ALL BUTTON ONLY AFTER 3 PROJECTS */}
-              <div className="text-center mt-12">
-                <Button asChild variant="outline" size="lg">
-                  <Link to="/projects">
-                    View All Projects <ArrowRight />
-                  </Link>
-                </Button>
-              </div>
+              {/* View All Projects Button - Only show when exactly 3 projects are displayed */}
+              {shouldShowViewAll && (
+                <div className="text-center mt-12">
+                  <Button asChild variant="outline" size="lg" className="gap-2">
+                    <Link to="/projects">
+                      View All Projects
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  </Button>
+                </div>
+              )}
             </>
-          )}
-
-          {/* NOT ENOUGH PROJECTS MESSAGE */}
-          {!loading && !hasEnoughProjects && (
-            <div className="text-center py-20 text-muted-foreground">
-              Projects are being updated. Please check back soon.
-            </div>
           )}
         </div>
       </section>
@@ -122,30 +188,50 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <SectionHeading
             title="Why Work With Me?"
-            subtitle="I bring technical expertise and creativity."
+            subtitle="I bring a unique combination of technical expertise and creative vision to every project."
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((f, i) => (
-              <div key={i} className="p-6 rounded-xl border">
-                <f.icon className="w-6 h-6 text-primary mb-3" />
-                <h3 className="font-bold mb-2">{f.title}</h3>
-                <p className="text-sm text-muted-foreground">{f.description}</p>
+            {features.map((feature, index) => (
+              <div
+                key={feature.title}
+                className="glass-card p-8 rounded-2xl hover-lift fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
+                  <feature.icon className="w-7 h-7 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold font-display mb-3">{feature.title}</h3>
+                <p className="text-muted-foreground">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 text-center">
-        <h2 className="text-4xl font-bold mb-4">
-          Let's Build Something <span className="gradient-text">Amazing</span>
-        </h2>
+      {/* CTA Section */}
+      <section className="py-5">
+        <div className="container mx-auto px-1">
+          <div className="glass-card rounded-3xl p-1 py-10 md:p-10 text-center relative overflow-hidden">
+            {/* Background Glow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-accent/20 pointer-events-none" />
 
-        <Button asChild size="lg">
-          <Link to="/contact">Start a Conversation <ArrowRight /></Link>
-        </Button>
+            <h2 className="text-3xl md:text-5xl font-bold font-display mb-4 relative">
+              Let's Build Something{' '}
+              <span className="gradient-text">Amazing</span>
+            </h2>
+            <p className=" text-xl text-muted-foreground mb-8 max-w-2xl mx-auto relative">
+              Have a project in mind? I'd love to hear about it. Let's work together
+              to create something extraordinary.
+            </p>
+            <Button asChild size="lg" className="gap-2 text-lg px-8 relative">
+              <Link to="/contact">
+                Start a Conversation
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </Button>
+          </div>
+        </div>
       </section>
     </Layout>
   );
