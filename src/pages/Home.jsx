@@ -131,7 +131,7 @@ const Home = () => {
             subtitle="A selection of my best work showcasing my skills in design and development."
           />
 
-          {/* Loader Spinner - Show while loading */}
+          {/* Show spinner while loading, show projects when done */}
           {isLoading ? (
             <LoadingSpinner />
           ) : (
@@ -148,7 +148,7 @@ const Home = () => {
                 ))}
               </div>
 
-              {/* View All Projects Button - Only show when exactly 3 projects are displayed */}
+              {/* Only show "View All Projects" when exactly 3 projects are displayed */}
               {shouldShowViewAll && (
                 <div className="text-center mt-12">
                   <Button asChild variant="outline" size="lg" className="gap-2">
