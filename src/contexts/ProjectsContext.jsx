@@ -38,10 +38,7 @@ export const ProjectsProvider = ({ children }) => {
   }, []);
 
 
-  // const deleteProject = (id) => {
-  //   const updated = projects.filter((p) => p._id !== id && p.id !== id);
-  //   setProjects(updated);
-  // };
+
 
   const deleteProject = async (id) => {
     try {
@@ -56,37 +53,6 @@ export const ProjectsProvider = ({ children }) => {
       alert("Failed to delete project");
     }
   };
-
-  // Add project locally (after upload)
-  // const addProject = (project) => {
-  //   const newProject = {
-  //     ...project,
-  //     id: Date.now().toString(),
-  //   };
-  //   const updated = [newProject, ...projects]; // Add to the top
-  //   setProjects(updated);
-  //   return newProject;
-  // };
-
-
-  // const updateProject = async (id, updatedData) => {
-  //   const res = await axios.put(
-  //     API_URLS.editprojects({ _id: id }),
-  //     {
-  //       projectName: data.projectName,
-  //       description: data.description,
-  //       url: data.url,
-  //       deployLink: data.deployLink,
-  //       projectcode: data.projectcode,
-  //     }
-  //   );
-
-  //   setProjects((prev) =>
-  //     prev.map((p) => (p._id === id ? res.data : p))
-  //   );
-
-  //   return res.data;
-  // };
 
 
 
@@ -119,9 +85,7 @@ export const ProjectsProvider = ({ children }) => {
 
 
 
-  // const getProject = (id) => {
-  //   return projects.find((p) => p._id === id || p.id === id);
-  // };
+
 
   const getProject = (id) => {
     if (!projects || projects.length === 0) return null;
@@ -132,7 +96,8 @@ export const ProjectsProvider = ({ children }) => {
   const value = {
     projects,
     // addProject,
-    loading,
+    // loading,
+    isLoading: loading,
     updateProject,
     deleteProject,
     getProject,
