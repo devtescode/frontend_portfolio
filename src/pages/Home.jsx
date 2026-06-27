@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Code2, Palette, Zap, Shield } from 'lucide-react';
+import { ArrowRight, Code2, Palette, Zap, Shield, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Layout from '@/components/layout/Layout';
 import ProjectCard from '@/components/ui/ProjectCard';
@@ -40,30 +40,11 @@ const features = [
   },
 ];
 
-// Custom Spinner Component with enhanced design
+// Simple Spinner Component using only Tailwind classes
 const LoadingSpinner = () => (
-  <div className="flex flex-col items-center justify-center py-20 gap-6">
-    <div className="relative">
-      {/* Outer ring with gradient */}
-      <div className="w-16 h-16 rounded-full border-4 border-primary/20 border-t-primary animate-spin"></div>
-      
-      {/* Inner pulsing dot */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="w-3 h-3 bg-primary rounded-full animate-ping"></div>
-      </div>
-      
-      {/* Secondary spinning ring */}
-      <div className="absolute top-0 left-0 w-16 h-16 rounded-full border-4 border-transparent border-b-accent/50 animate-spin-slow"></div>
-    </div>
-    
-    <div className="flex flex-col items-center gap-2">
-      <p className="text-lg font-medium text-foreground">Loading Projects</p>
-      <div className="flex gap-1">
-        <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-        <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-        <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
-      </div>
-    </div>
+  <div className="flex flex-col items-center justify-center py-20 gap-4">
+    <Loader2 className="w-12 h-12 animate-spin text-primary" />
+    <p className="text-muted-foreground">Loading projects...</p>
   </div>
 );
 
