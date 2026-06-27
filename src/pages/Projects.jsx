@@ -30,7 +30,8 @@ const Projects = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project, index) => (
                 <div
-                  key={project.id}
+                  // key={project._id}
+                   key={project._id || project.id || index}
                   className="fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
