@@ -68,6 +68,23 @@ export const setUnauthorizedHandler = (handler: UnauthorizedHandler | null) => {
 };
 
 export const toApiError = (error: unknown): ApiError => {
+  // The response interceptor normalizes Axios errors before feature APIs see
+  // them. Preserve that shape when a caller needs to inspect or display it.
+  if (
+    error &&
+    typeof error === "object" &&
+    typeof (error as ApiError).message === "string" &&
+    ("status" in error || "details" in error || "isNetworkError" in error)
+  ) {
+    const apiError = error as ApiError;
+    return {
+      status: apiError.status,
+      message: apiError.message,
+      details: apiError.details,
+      isNetworkError: apiError.isNetworkError,
+    };
+  }
+
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError<Record<string, unknown> | string>;
     const data = axiosError.response?.data;

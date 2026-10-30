@@ -53,7 +53,7 @@ export const QueryState = ({
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-destructive/10">
           <AlertTriangle className="h-7 w-7 text-destructive" />
         </div>
-        <h3 className="mb-2 text-xl font-bold font-display">Something went wrong</h3>
+        <h3 className="mb-2 text-xl font-bold font-display">Unable to load this content</h3>
         <p className="mb-6 text-sm text-muted-foreground">
           {getErrorMessage(error, "We couldn't load this content. Please try again.")}
         </p>
