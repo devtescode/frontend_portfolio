@@ -48,23 +48,23 @@ const About = () => {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
       
       {/* Image */}
-      <div className="relative fade-in flex justify-center lg:justify-start">
-        <div className="aspect-square w-full max-w-xs sm:max-w-sm md:max-w-md relative">
+      <div className="relative fade-in flex justify-center lg:justify-start px-2 sm:px-0">
+        <div className="aspect-square w-[min(78vw,20rem)] sm:w-full max-w-md relative">
           
           {/* Background glow */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent rounded-3xl rotate-6 opacity-20" />
 
           {/* Image container */}
-          <div className="relative bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl overflow-hidden border border-white/10">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl overflow-hidden border border-white/10">
             <img
               src={Image}
-              alt="Profile"
-              className="w-full h-full object-cover"
+              alt="Portrait of Teslim Agboola"
+              className="absolute inset-0 w-full h-full object-cover object-center"
             />
           </div>
 
           {/* Floating Badge */}
-          <div className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 glass-card px-4 sm:px-6 py-2 sm:py-3 rounded-xl">
+          <div className="absolute -bottom-3 right-0 sm:-bottom-4 sm:-right-4 glass-card px-4 sm:px-6 py-2 sm:py-3 rounded-xl">
             <p className="text-xs sm:text-sm text-muted-foreground">
               Experience
             </p>

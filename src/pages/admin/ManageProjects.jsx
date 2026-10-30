@@ -4,6 +4,7 @@ import { Pencil, Trash2, Plus, ExternalLink, Star } from 'lucide-react';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { Button } from '@/components/ui/button';
 import { useProjects, useDeleteProject } from '@/hooks/useProjects';
+import QueryState from '@/components/QueryState';
 import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
@@ -17,7 +18,8 @@ import {
 } from '@/components/ui/alert-dialog';
 
 const ManageProjects = () => {
-  const { projects } = useProjects();
+  const projectsQuery = useProjects();
+  const { projects } = projectsQuery;
   const { toast } = useToast();
   const [deleteId, setDeleteId] = useState(null);
 
@@ -65,7 +67,20 @@ const ManageProjects = () => {
         </div>
 
         {/* Projects Grid */}
-        {projects.length > 0 ? (
+        <QueryState
+          isLoading={projectsQuery.isLoading}
+          isError={projectsQuery.isError}
+          error={projectsQuery.error}
+          isEmpty={projects.length === 0}
+          onRetry={projectsQuery.refetch}
+          emptyTitle="No projects yet"
+          emptyMessage="Start building your portfolio by adding your first project."
+          emptyAction={(
+            <Button asChild>
+              <Link to="/admin/add-project">Add Your First Project</Link>
+            </Button>
+          )}
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project) => (
               <div
@@ -150,22 +165,7 @@ const ManageProjects = () => {
               </div>
             ))}
           </div>
-        ) : (
-          <div className="glass-card rounded-2xl p-12 text-center">
-            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-              <Plus className="w-8 h-8 text-muted-foreground" />
-            </div>
-            <h3 className="text-xl font-bold font-display mb-2">
-              No projects yet
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              Start building your portfolio by adding your first project.
-            </p>
-            <Button asChild>
-              <Link to="/admin/add-project">Add Your First Project</Link>
-            </Button>
-          </div>
-        )}
+        </QueryState>
       </div>
 
       {/* Delete Confirmation */}

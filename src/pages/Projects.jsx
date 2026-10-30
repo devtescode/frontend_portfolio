@@ -1,11 +1,12 @@
 import Layout from '@/components/layout/Layout';
 import SectionHeading from '@/components/ui/SectionHeading';
 import ProjectCard from '@/components/ui/ProjectCard';
+import QueryState from '@/components/QueryState';
+import ProjectLoading from '@/components/ProjectLoading';
 import { useProjects } from '@/hooks/useProjects';
 
 const Projects = () => {
-  const { projects, isLoading: loading } = useProjects();
-
+  const { projects, isLoading, isError, error, refetch } = useProjects();
 
   return (
     <Layout>
@@ -16,17 +17,17 @@ const Projects = () => {
             subtitle="A collection of my work showcasing my skills in design, development, and problem-solving."
           />
 
-          {/* Loading */}
-          {loading && (
-            <div className="text-center py-20">
-              <p className="text-muted-foreground text-lg">
-                Loading projects...
-              </p>
-            </div>
-          )}
-
-          {/* Projects */}
-          {!loading && projects.length > 0 && (
+          <QueryState
+            isLoading={isLoading}
+            isError={isError}
+            error={error}
+            isEmpty={projects.length === 0}
+            onRetry={refetch}
+            loadingLabel="Loading projects..."
+            loadingContent={<ProjectLoading />}
+            emptyTitle="No projects yet"
+            emptyMessage="Check back soon!"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project, index) => (
                 <div
@@ -39,16 +40,7 @@ const Projects = () => {
                 </div>
               ))}
             </div>
-          )}
-
-          {/* No projects */}
-          {!loading && projects.length === 0 && (
-            <div className="text-center py-20">
-              <p className="text-muted-foreground text-lg">
-                No projects yet. Check back soon!
-              </p>
-            </div>
-          )}
+          </QueryState>
 
         </div>
       </section>

@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Code2, Palette, Zap, Shield, Loader2 } from 'lucide-react';
+import { ArrowRight, Code2, Palette, Zap, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Layout from '@/components/layout/Layout';
 import ProjectCard from '@/components/ui/ProjectCard';
+import QueryState from '@/components/QueryState';
+import ProjectLoading from '@/components/ProjectLoading';
 import SectionHeading from '@/components/ui/SectionHeading';
 import { useProjects } from '@/hooks/useProjects';
 
@@ -40,16 +42,8 @@ const features = [
   },
 ];
 
-// Simple Spinner Component using only Tailwind classes
-const LoadingSpinner = () => (
-  <div className="flex flex-col items-center justify-center py-20 gap-4">
-    <Loader2 className="w-12 h-12 animate-spin text-primary" />
-    <p className="text-muted-foreground">Loading projects...</p>
-  </div>
-);
-
 const Home = () => {
-  const { latestProjects, isLoading } = useProjects();
+  const { latestProjects, isLoading, isError, error, refetch } = useProjects();
 
   // Check if we have exactly 3 projects displayed
   const hasThreeProjects = latestProjects.length === 3;
@@ -131,36 +125,41 @@ const Home = () => {
             subtitle="A selection of my best work showcasing my skills in design and development."
           />
 
-          {/* Show spinner while loading, show projects when done */}
-          {isLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {latestProjects.map((project, index) => (
-                  <div
-                    key={project._id || project.id}
-                    className="fade-in"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <ProjectCard project={project} />
-                  </div>
-                ))}
-              </div>
-
-              {/* Only show "View All Projects" when exactly 3 projects are displayed */}
-              {shouldShowViewAll && (
-                <div className="text-center mt-12">
-                  <Button asChild variant="outline" size="lg" className="gap-2">
-                    <Link to="/projects">
-                      View All Projects
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </Button>
+          <QueryState
+            isLoading={isLoading}
+            isError={isError}
+            error={error}
+            isEmpty={latestProjects.length === 0}
+            onRetry={refetch}
+            loadingLabel="Loading projects..."
+            loadingContent={<ProjectLoading />}
+            emptyTitle="No featured projects yet"
+            emptyMessage="Projects will appear here as soon as they are published."
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {latestProjects.map((project, index) => (
+                <div
+                  key={project._id || project.id}
+                  className="fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <ProjectCard project={project} />
                 </div>
-              )}
-            </>
-          )}
+              ))}
+            </div>
+
+            {/* Only show "View All Projects" when exactly 3 projects are displayed */}
+            {shouldShowViewAll && (
+              <div className="text-center mt-12">
+                <Button asChild variant="outline" size="lg" className="gap-2">
+                  <Link to="/projects">
+                    View All Projects
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </QueryState>
         </div>
       </section>
 

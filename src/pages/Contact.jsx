@@ -9,6 +9,7 @@ import SectionHeading from '@/components/ui/SectionHeading';
 import { useToast } from '@/hooks/use-toast';
 import * as Yup from "yup";
 import { useSendContact } from '@/hooks/useContact';
+import { getErrorMessage } from '@/lib/apiClient';
 
 const contactInfo = [
   {
@@ -80,11 +81,11 @@ const Contact = () => {
         message: "",
       });
     },
-    onError: () => {
+    onError: (error) => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: getErrorMessage(error, "Something went wrong. Please try again."),
       });
     },
   });
@@ -97,6 +98,7 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (sendContact.isPending) return;
     setErrors({});
     try {
       await validationSchema.validate(formData, { abortEarly: false });

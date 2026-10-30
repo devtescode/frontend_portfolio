@@ -1,54 +1,57 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { setUnauthorizedHandler } from "@/lib/apiClient";
+import { clearStoredSession, persistSession, readStoredSession } from "@/features/auth/session";
 
 const AuthContext = createContext(null);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
 
+/**
+ * Session state for the admin area.
+ *
+ * The previous implementation carried hard-coded demo credentials and a fake
+ * `login()`. Authentication now goes through `useLogin` (a React Query
+ * mutation); this provider only owns persistence and exposes `signIn`/`logout`.
+ */
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
+  const [session, setSession] = useState(readStoredSession);
 
+  const logout = useCallback(() => {
+    clearStoredSession();
+    setSession({ token: null, user: null });
+    // Drop any cached admin data so the next login starts clean.
+    queryClient.clear();
+  }, [queryClient]);
+
+  // A 401 from any request clears the session and bounces to /admin/login.
   useEffect(() => {
-    const storedUser = localStorage.getItem('admin_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
+    setUnauthorizedHandler(logout);
+    return () => setUnauthorizedHandler(null);
+  }, [logout]);
+
+  const signIn = useCallback((payload) => {
+    setSession(persistSession(payload));
   }, []);
 
-  const login = async (email, password) => {
-    // Demo admin credentials - in production, connect to your backend
-    if (email === 'admin@portfolio.com' && password === 'admin123') {
-      const userData = { email, name: 'Admin', role: 'admin' };
-      localStorage.setItem('admin_user', JSON.stringify(userData));
-      setUser(userData);
-      return { success: true };
-    }
-    return { success: false, error: 'Invalid credentials' };
-  };
-
-  const logout = () => {
-    localStorage.removeItem('admin_user');
-    setUser(null);
-  };
-
-  const value = {
-    user,
-    loading,
-    login,
-    logout,
-    isAuthenticated: !!user,
-  };
-
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      user: session.user,
+      token: session.token,
+      isAuthenticated: Boolean(session.token && session.user),
+      isLoading: false,
+      signIn,
+      logout,
+    }),
+    [session, signIn, logout],
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

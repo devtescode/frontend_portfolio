@@ -8,11 +8,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useProject, useUpdateProject, useUploadProjectImage } from '@/hooks/useProjects';
 import { useToast } from '@/hooks/use-toast';
+import QueryState from '@/components/QueryState';
 
 const EditProject = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: project } = useProject(id);
+  const projectQuery = useProject(id);
+  const { data: project } = projectQuery;
   const { toast } = useToast();
 
   const updateProject = useUpdateProject({
@@ -93,6 +95,15 @@ const EditProject = () => {
       <div className="max-w-2xl">
         <h1 className="text-2xl font-bold font-display mb-6">Edit Project</h1>
 
+        <QueryState
+          isLoading={projectQuery.isLoading}
+          isError={projectQuery.isError}
+          error={projectQuery.error}
+          isEmpty={!project}
+          onRetry={projectQuery.refetch}
+          emptyTitle="Project not found"
+          emptyMessage="This project may have been removed or the link may be incorrect."
+        >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="glass-card p-6 rounded-2xl space-y-6">
             {/* Project Name */}
@@ -204,6 +215,7 @@ const EditProject = () => {
             </Button>
           </div>
         </form>
+        </QueryState>
       </div>
     </AdminLayout>
   );

@@ -2,19 +2,33 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createProject,
   deleteProject,
+  fetchProject,
+  fetchProjectNumbers,
   fetchProjects,
   updateProject,
   uploadProjectImage,
-} from '@/lib/api';
-
-export const projectKeys = {
-  all: ['projects'],
-};
+} from '@/features/projects/api';
+import { projectKeys } from '@/lib/queryKeys';
 
 export const useProjectsQuery = (options = {}) =>
   useQuery({
-    queryKey: projectKeys.all,
+    queryKey: projectKeys.list(),
     queryFn: fetchProjects,
+    ...options,
+  });
+
+export const useProjectQuery = (id, options = {}) =>
+  useQuery({
+    queryKey: projectKeys.detail(id ?? ''),
+    queryFn: () => fetchProject(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+
+export const useProjectNumbers = (options = {}) =>
+  useQuery({
+    queryKey: projectKeys.numbers(),
+    queryFn: fetchProjectNumbers,
     ...options,
   });
 
@@ -30,9 +44,7 @@ export const useProjects = () => {
 };
 
 export const useProject = (id) =>
-  useProjectsQuery({
-    select: (projects) => projects.find((p) => p._id === id) ?? null,
-  });
+  useProjectQuery(id);
 
 export const useCreateProject = (options = {}) => {
   const queryClient = useQueryClient();
@@ -52,9 +64,10 @@ export const useUpdateProject = (options = {}) => {
     mutationFn: updateProject,
     ...options,
     onSuccess: (updated, variables, ...rest) => {
-      queryClient.setQueryData(projectKeys.all, (old) =>
+      queryClient.setQueryData(projectKeys.list(), (old) =>
         old?.map((p) => (p._id === variables.id ? updated : p))
       );
+      queryClient.setQueryData(projectKeys.detail(variables.id), updated);
       queryClient.invalidateQueries({ queryKey: projectKeys.all });
       options.onSuccess?.(updated, variables, ...rest);
     },
@@ -79,18 +92,23 @@ export const useDeleteProject = (options = {}) => {
     mutationFn: deleteProject,
     ...options,
     // Optimistically remove from the list
-    onMutate: async (id) => {
+    onMutate: async (id, mutationContext) => {
       await queryClient.cancelQueries({ queryKey: projectKeys.all });
-      const previous = queryClient.getQueryData(projectKeys.all);
-      queryClient.setQueryData(projectKeys.all, (old) => old?.filter((p) => p._id !== id));
-      return { previous };
+      const previous = queryClient.getQueryData(projectKeys.list());
+      queryClient.setQueryData(projectKeys.list(), (old) => old?.filter((p) => p._id !== id));
+      const userContext = await options.onMutate?.(id, mutationContext);
+      return { previous, userContext };
     },
-    onError: (error, id, context, ...rest) => {
-      if (context?.previous) queryClient.setQueryData(projectKeys.all, context.previous);
-      options.onError?.(error, id, context, ...rest);
+    onSuccess: (data, id, context, mutationContext) => {
+      options.onSuccess?.(data, id, context?.userContext, mutationContext);
     },
-    onSettled: () => {
+    onError: (error, id, context, mutationContext) => {
+      if (context?.previous) queryClient.setQueryData(projectKeys.list(), context.previous);
+      options.onError?.(error, id, context?.userContext, mutationContext);
+    },
+    onSettled: (data, error, id, context, mutationContext) => {
       queryClient.invalidateQueries({ queryKey: projectKeys.all });
+      options.onSettled?.(data, error, id, context?.userContext, mutationContext);
     },
   });
 };

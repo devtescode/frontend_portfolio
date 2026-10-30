@@ -1,5 +1,4 @@
-const isProduction = window.location.hostname !== 'localhost'; // Check if it's not localhost
+import { API_BASE_URL } from "@/lib/env";
 
-export const baseURL = isProduction 
-  ? 'https://portfolio-backend-galc.onrender.com'   
-  : 'http://localhost:4000';
+/** @deprecated Import `API_BASE_URL` from `@/lib/env` instead. */
+export const baseURL = API_BASE_URL;

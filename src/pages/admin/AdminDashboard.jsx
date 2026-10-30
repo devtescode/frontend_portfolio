@@ -1,7 +1,8 @@
 import { FolderKanban, Eye, TrendingUp, Clock } from 'lucide-react';
 import AdminLayout from '@/components/layout/AdminLayout';
-import { useProjects } from '@/hooks/useProjects';
+import { useProjectNumbers, useProjects } from '@/hooks/useProjects';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import QueryState from '@/components/QueryState';
 
 const stats = [
   {
@@ -25,10 +26,12 @@ const stats = [
 ];
 
 const AdminDashboard = () => {
-  const { projects } = useProjects();
+  const projectsQuery = useProjects();
+  const projectNumbersQuery = useProjectNumbers();
+  const { projects } = projectsQuery;
 
   const updatedStats = [
-    { ...stats[0], value: projects.length.toString() },
+    { ...stats[0], value: projectNumbersQuery.isLoading ? '…' : projectNumbersQuery.isError ? '—' : String(projectNumbersQuery.data?.allProjects ?? projects.length) },
     stats[1],
     stats[2],
   ];
@@ -75,7 +78,15 @@ const AdminDashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {projects.length > 0 ? (
+            <QueryState
+              isLoading={projectsQuery.isLoading}
+              isError={projectsQuery.isError}
+              error={projectsQuery.error}
+              isEmpty={projects.length === 0}
+              onRetry={projectsQuery.refetch}
+              emptyTitle="No projects yet"
+              emptyMessage="Add your first project to see it here."
+            >
               <div className="space-y-4">
                 {projects.slice(0, 5).map((project) => (
                   <div
@@ -101,11 +112,7 @@ const AdminDashboard = () => {
                   </div>
                 ))}
               </div>
-            ) : (
-              <p className="text-muted-foreground text-center py-8">
-                No projects yet. Add your first project!
-              </p>
-            )}
+            </QueryState>
           </CardContent>
         </Card>
       </div>
