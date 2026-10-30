@@ -1,39 +1,49 @@
-import { FolderKanban, Eye, TrendingUp, Clock } from 'lucide-react';
+import { FolderKanban, Eye, TrendingUp, Clock, RefreshCw } from 'lucide-react';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { useProjectNumbers, useProjects } from '@/hooks/useProjects';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import QueryState from '@/components/QueryState';
+import { Button } from '@/components/ui/button';
 
 const stats = [
   {
     title: 'Total Projects',
     value: '0',
     icon: FolderKanban,
-    change: '+2 this month',
+    change: 'Live project count',
   },
   {
     title: 'Portfolio Views',
-    value: '1,234',
+    value: '—',
     icon: Eye,
-    change: '+12% from last month',
+    change: 'Analytics API not connected',
   },
   {
     title: 'Engagement Rate',
-    value: '24%',
+    value: '—',
     icon: TrendingUp,
-    change: '+5% from last month',
+    change: 'Analytics API not connected',
   },
 ];
 
 const AdminDashboard = () => {
-  const projectsQuery = useProjects();
-  const projectNumbersQuery = useProjectNumbers();
+  const projectsQuery = useProjects({ refetchInterval: 10_000, refetchIntervalInBackground: false });
+  const projectNumbersQuery = useProjectNumbers({ refetchInterval: 10_000, refetchIntervalInBackground: false });
   const { projects } = projectsQuery;
+  const lastUpdated = Math.max(projectsQuery.dataUpdatedAt || 0, projectNumbersQuery.dataUpdatedAt || 0);
+  const isRefreshing = projectsQuery.isFetching || projectNumbersQuery.isFetching;
+  const refreshDashboard = () => Promise.all([projectsQuery.refetch(), projectNumbersQuery.refetch()]);
+  const now = new Date();
+  const newProjectsThisMonth = projects.filter((project) => {
+    if (!project.createdAt) return false;
+    const createdAt = new Date(project.createdAt);
+    return createdAt.getFullYear() === now.getFullYear() && createdAt.getMonth() === now.getMonth();
+  }).length;
 
   const updatedStats = [
     { ...stats[0], value: projectNumbersQuery.isLoading ? '…' : projectNumbersQuery.isError ? '—' : String(projectNumbersQuery.data?.allProjects ?? projects.length) },
     stats[1],
-    stats[2],
+    { ...stats[2], value: String(newProjectsThisMonth), change: 'Created this month' },
   ];
 
   return (
@@ -44,9 +54,20 @@ const AdminDashboard = () => {
           <h1 className="text-3xl font-bold font-display mb-2">
             Welcome back! 👋
           </h1>
-          <p className="text-muted-foreground">
-            Here's what's happening with your portfolio.
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-muted-foreground">
+              Here's what's happening with your portfolio.
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-xs text-muted-foreground">
+                {lastUpdated ? `Updated ${new Date(lastUpdated).toLocaleTimeString()}` : 'Waiting for data'} · refreshes every 10 sec
+              </span>
+              <Button variant="outline" size="sm" onClick={refreshDashboard} disabled={isRefreshing}>
+                <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Stats Grid */}
@@ -90,7 +111,7 @@ const AdminDashboard = () => {
               <div className="space-y-4">
                 {projects.slice(0, 5).map((project) => (
                   <div
-                    key={project.id}
+                    key={project._id}
                     className="flex items-center gap-4 p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
                   >
                     <img

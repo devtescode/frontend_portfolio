@@ -38,8 +38,20 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use((config) => {
   const token = tokenStore.get();
-  if (token) {
+  const method = config.method?.toLowerCase();
+  const path = (config.url ?? "").split("?")[0];
+  const projectMutation =
+    /^\/api\/projects\/[^/]+$/.test(path) && (method === "put" || method === "delete");
+  const requiresAuthentication =
+    path === "/portfolio/me" ||
+    (path === "/api/upload" && method === "post") ||
+    (path.startsWith("/api/uploadimage/") && method === "put") ||
+    projectMutation;
+
+  if (token && requiresAuthentication) {
     config.headers.Authorization = `Bearer ${token}`;
+  } else {
+    delete config.headers.Authorization;
   }
   return config;
 });

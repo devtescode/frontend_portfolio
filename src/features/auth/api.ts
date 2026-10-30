@@ -4,6 +4,9 @@ import type { AdminUser, LoginCredentials, LoginResponse } from "@/types/api";
 /** `POST /portfolio/login` — exchanges credentials for a JWT (valid for 1h). */
 export const login = async (credentials: LoginCredentials): Promise<LoginResponse> => {
   const { data } = await apiClient.post<LoginResponse>("/portfolio/login", credentials);
+  if (!data || data.status === false || typeof data.token !== "string" || !data.token.trim()) {
+    throw new Error("The server did not return a valid sign-in token.");
+  }
   return data;
 };
 

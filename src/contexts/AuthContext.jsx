@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { setUnauthorizedHandler } from "@/lib/apiClient";
+import { setUnauthorizedHandler, TOKEN_STORAGE_KEY } from "@/lib/apiClient";
 import { clearStoredSession, persistSession, readStoredSession } from "@/features/auth/session";
 
 const AuthContext = createContext(null);
@@ -37,6 +37,17 @@ export const AuthProvider = ({ children }) => {
     return () => setUnauthorizedHandler(null);
   }, [logout]);
 
+  // Keep separate admin tabs in sync when one signs out or switches session.
+  useEffect(() => {
+    const syncSession = (event) => {
+      if (event.key && event.key !== TOKEN_STORAGE_KEY) return;
+      queryClient.clear();
+      setSession(readStoredSession());
+    };
+    window.addEventListener("storage", syncSession);
+    return () => window.removeEventListener("storage", syncSession);
+  }, [queryClient]);
+
   const signIn = useCallback((payload) => {
     setSession(persistSession(payload));
   }, []);
@@ -45,7 +56,9 @@ export const AuthProvider = ({ children }) => {
     () => ({
       user: session.user,
       token: session.token,
-      isAuthenticated: Boolean(session.token && session.user),
+      isAuthenticated: Boolean(
+        session.token && session.user && session.user.role === "admin",
+      ),
       isLoading: false,
       signIn,
       logout,

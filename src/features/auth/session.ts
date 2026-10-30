@@ -33,10 +33,14 @@ export interface PersistedSession {
   user: AdminUser | null;
 }
 
-export const readStoredSession = (): PersistedSession => ({
-  token: tokenStore.get(),
-  user: readStoredUser(),
-});
+export const readStoredSession = (): PersistedSession => {
+  const session = { token: tokenStore.get(), user: readStoredUser() };
+  if (!isSessionValid(session)) {
+    if (session.token) clearStoredSession();
+    return { token: null, user: null };
+  }
+  return session;
+};
 
 export interface SessionInput {
   token: string;
@@ -68,4 +72,20 @@ export const clearStoredSession = () => {
 };
 
 export const isSessionValid = (session: PersistedSession) =>
-  Boolean(session.token && session.user);
+  Boolean(session.token && session.user && !isTokenExpired(session.token));
+
+const isTokenExpired = (token: string) => {
+  try {
+    const payload = token.split(".")[1];
+    if (!payload) return false;
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+    const claims = JSON.parse(atob(padded));
+    return typeof claims.exp === "number" && claims.exp * 1000 <= Date.now();
+  } catch {
+    // The API remains responsible for validating tokens; malformed tokens will
+    // be rejected there and cleared by the 401 interceptor.
+    return false;
+  }
+};
+
