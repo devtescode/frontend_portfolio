@@ -10,15 +10,6 @@ import {
 } from '@/features/projects/api';
 import { projectKeys } from '@/lib/queryKeys';
 
-const getProjectTimestamp = (project) => {
-  const createdAt = Date.parse(project.createdAt ?? '');
-  if (Number.isFinite(createdAt)) return createdAt;
-
-  // Mongo ObjectIds begin with the creation time as a Unix timestamp.
-  const objectIdTime = project._id?.match(/^[a-f\d]{8}/i)?.[0];
-  return objectIdTime ? Number.parseInt(objectIdTime, 16) * 1000 : 0;
-};
-
 export const useProjectsQuery = (options = {}) =>
   useQuery({
     queryKey: projectKeys.list(),
@@ -45,14 +36,10 @@ export const useProjectNumbers = (options = {}) =>
 export const useProjects = (options = {}) => {
   const query = useProjectsQuery(options);
   const projects = query.data ?? [];
-  const latestProjects = [...projects]
-    .sort((a, b) => getProjectTimestamp(a) - getProjectTimestamp(b))
-    .slice(-3)
-    .reverse();
   return {
     ...query,
     projects,
-    latestProjects,
+    latestProjects: projects.slice(0, 3),
   };
 };
 
