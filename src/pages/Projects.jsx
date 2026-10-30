@@ -1,10 +1,10 @@
 import Layout from '@/components/layout/Layout';
 import SectionHeading from '@/components/ui/SectionHeading';
 import ProjectCard from '@/components/ui/ProjectCard';
-import { useProjects } from '@/contexts/ProjectsContext';
+import { useProjects } from '@/hooks/useProjects';
 
 const Projects = () => {
-  const { projects, loading } = useProjects();
+  const { projects, isLoading: loading } = useProjects();
 
 
   return (

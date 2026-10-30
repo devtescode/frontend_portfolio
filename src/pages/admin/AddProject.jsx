@@ -8,14 +8,31 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import axios from 'axios';
-import { API_URLS } from '../../components/utils/apiConfig';
+import { useCreateProject } from '@/hooks/useProjects';
 // import Swal from 'sweetalert2';
 
 const AddProject = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+
+  const createProject = useCreateProject({
+    onSuccess: (data) => {
+      toast({
+        title: 'Project uploaded!',
+        description: data.imageUrl || 'Your project has been uploaded successfully.',
+      });
+      navigate('/admin/projects');
+    },
+    onError: (error) => {
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: error.response?.data?.error || 'Failed to upload project.',
+        variant: 'destructive',
+      });
+    },
+  });
+  const loading = createProject.isPending;
 
   // Form state
   const [formData, setFormData] = useState({
@@ -48,44 +65,14 @@ const AddProject = () => {
       return;
     }
 
-    setLoading(true);
+    const payload = new FormData();
+    payload.append('image', file);
+    payload.append('projectName', formData.projectName);
+    payload.append('deployLink', formData.deployLink);
+    payload.append('projectcode', formData.projectcode);
+    payload.append('description', formData.description);
 
-    try {
-      const payload = new FormData();
-      payload.append('image', file);
-      payload.append('projectName', formData.projectName);
-      payload.append('deployLink', formData.deployLink);
-      payload.append('projectcode', formData.projectcode);
-      payload.append('description', formData.description);
-
-      const response = await axios.post(API_URLS.upload, payload, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      toast({
-        title: 'Project uploaded!',
-        description: response.data.imageUrl || 'Your project has been uploaded successfully.',
-      });
-
-      // Clear form
-      setFormData({ projectName: '', deployLink: '', projectcode: '', description: '' });
-      setFile(null);
-      document.getElementById('fileInput').value = '';
-
-      navigate('/admin/projects');
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: error.response?.data?.error || 'Failed to upload project.',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
+    createProject.mutate(payload);
   };
 
   return (

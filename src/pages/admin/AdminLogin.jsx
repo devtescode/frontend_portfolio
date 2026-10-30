@@ -6,8 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { API_URLS } from '../../components/utils/apiConfig';
-import axios from 'axios';
+import { useLogin } from '@/hooks/useAuthMutations';
 
 const AdminLogin = () => {
   // const { login, isAuthenticated } = useAuth();
@@ -54,45 +53,32 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const loginMutation = useLogin({
+    onSuccess: (data) => {
+      toast({
+        title: 'Welcome back!',
+        description: data.message,
+      });
+      navigate("/admin"); // go to admin dashboard
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.response?.data?.message || 'Invalid credentials',
+        variant: 'destructive',
+      });
+    },
+  });
+  const loading = loginMutation.isPending;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-
-    try {
-      const response = await axios.post(
-        API_URLS.adminlogin,
-        {
-          email: formData.email,
-          password: formData.password,
-        }
-      );
-
-      // Save token to localStorage
-      localStorage.setItem("token", response.data.token);
-
-
-      toast({
-        title: 'Welcome back!',
-        description: response.data.message,
-      });
-
-      navigate("/admin"); // go to admin dashboard
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: error.response?.data?.message || 'Invalid credentials',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
+    loginMutation.mutate({ email: formData.email, password: formData.password });
   };
 
   return (

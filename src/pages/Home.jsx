@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import Layout from '@/components/layout/Layout';
 import ProjectCard from '@/components/ui/ProjectCard';
 import SectionHeading from '@/components/ui/SectionHeading';
-import { useProjects } from '@/contexts/ProjectsContext';
+import { useProjects } from '@/hooks/useProjects';
 
 const techStack = [
   { name: 'React', icon: '⚛️' },
@@ -49,7 +49,7 @@ const LoadingSpinner = () => (
 );
 
 const Home = () => {
-  const { latestProjects, isLoading } = useProjects(-3);
+  const { latestProjects, isLoading } = useProjects();
 
   // Check if we have exactly 3 projects displayed
   const hasThreeProjects = latestProjects.length === 3;

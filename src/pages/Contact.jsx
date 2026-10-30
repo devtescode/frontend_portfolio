@@ -8,7 +8,7 @@ import Layout from '@/components/layout/Layout';
 import SectionHeading from '@/components/ui/SectionHeading';
 import { useToast } from '@/hooks/use-toast';
 import * as Yup from "yup";
-import { API_URLS } from '../components/utils/apiConfig';
+import { useSendContact } from '@/hooks/useContact';
 
 const contactInfo = [
   {
@@ -63,34 +63,10 @@ const Contact = () => {
     phone: "",
     message: "",
   });
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    // console.log("Submitting form");
-    e.preventDefault();
-    setErrors({});
-    setLoading(true);
-    try {
-      // Validate
-      await validationSchema.validate(formData, { abortEarly: false });
-
-      const response = await fetch(API_URLS.contact, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to send message");
-      }
+  const sendContact = useSendContact({
+    onSuccess: () => {
       toast({
         title: "Message sent!",
         description: "Thank you for reaching out. I'll get back to you soon.",
@@ -103,23 +79,36 @@ const Contact = () => {
         phone: "",
         message: "",
       });
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+      });
+    },
+  });
+  const loading = sendContact.isPending;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors({});
+    try {
+      await validationSchema.validate(formData, { abortEarly: false });
     } catch (err) {
-      if (err.name === "ValidationError") {
-        const newErrors = {};
-        err.inner.forEach((e) => {
-          newErrors[e.path] = e.message;
-        });
-        setErrors(newErrors);
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Something went wrong. Please try again.",
-        });
-      }
-    } finally {
-      setLoading(false);
+      const newErrors = {};
+      err.inner.forEach((e) => {
+        newErrors[e.path] = e.message;
+      });
+      setErrors(newErrors);
+      return;
     }
+    sendContact.mutate(formData);
   };
 
   return (

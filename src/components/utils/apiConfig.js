@@ -5,7 +5,7 @@ import { baseURL } from "./config";
 export const API_URLS = {
     adminlogin: `${baseURL}/portfolio/login`,
     getprojects:  `${baseURL}/api/projects`,
-    delectprojects: (projectId) =>  ` ${baseURL}/api/projects/${projectId}`,
+    delectprojects: (projectId) => `${baseURL}/api/projects/${projectId}`,
     editprojects: (id) => `${baseURL}/api/projects/${id}`,
     uploadimage: (id) => `${baseURL}/api/uploadimage/${id}`,
     fetchimage: `${baseURL}/api/images`,

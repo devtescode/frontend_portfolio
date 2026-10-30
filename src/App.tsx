@@ -5,7 +5,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { ProjectsProvider } from "@/contexts/ProjectsContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -24,7 +23,15 @@ import ManageProjects from "./pages/admin/ManageProjects";
 import EditProject from "./pages/admin/EditProject";
 import AdminProfile from "./pages/admin/AdminProfile";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(() => {
@@ -50,7 +57,6 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-          <ProjectsProvider>
             <TooltipProvider>
               <Toaster />
               <Sonner />
@@ -75,7 +81,6 @@ const App = () => {
                 </Routes>
               </BrowserRouter>
             </TooltipProvider>
-          </ProjectsProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

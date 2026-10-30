@@ -1,6 +1,6 @@
 import { FolderKanban, Eye, TrendingUp, Clock } from 'lucide-react';
 import AdminLayout from '@/components/layout/AdminLayout';
-import { useProjects } from '@/contexts/ProjectsContext';
+import { useProjects } from '@/hooks/useProjects';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const stats = [
@@ -25,7 +25,7 @@ const stats = [
 ];
 
 const AdminDashboard = () => {
-  const { projects, featuredProjects } = useProjects();
+  const { projects } = useProjects();
 
   const updatedStats = [
     { ...stats[0], value: projects.length.toString() },
@@ -77,7 +77,7 @@ const AdminDashboard = () => {
           <CardContent>
             {projects.length > 0 ? (
               <div className="space-y-4">
-                {projects.slice(-5).map((project) => (
+                {projects.slice(0, 5).map((project) => (
                   <div
                     key={project.id}
                     className="flex items-center gap-4 p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors"

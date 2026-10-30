@@ -6,19 +6,47 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { useProjects } from '@/contexts/ProjectsContext';
+import { useProject, useUpdateProject, useUploadProjectImage } from '@/hooks/useProjects';
 import { useToast } from '@/hooks/use-toast';
-import axios from 'axios';
-import { API_URLS } from '../../components/utils/apiConfig';
 
 const EditProject = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getProject, updateProject } = useProjects();
+  const { data: project } = useProject(id);
   const { toast } = useToast();
 
-  const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const updateProject = useUpdateProject({
+    onSuccess: () => {
+      toast({
+        title: 'Project updated!',
+        description: 'Your changes have been saved successfully.',
+      });
+      navigate('/admin/projects');
+    },
+    onError: (error) => {
+      console.error('Error updating project:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update project.',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const uploadImage = useUploadProjectImage({
+    onSuccess: (data) => {
+      setFormData((prev) => ({ ...prev, url: data.url }));
+      toast({ title: 'Image uploaded!', description: 'Preview updated.' });
+    },
+    onError: (error) => {
+      console.error('Upload failed', error);
+      toast({ title: 'Error', description: 'Image upload failed.', variant: 'destructive' });
+    },
+  });
+
+  const loading = updateProject.isPending;
+  const uploading = uploadImage.isPending;
+  const [loadedId, setLoadedId] = useState(null);
   const [formData, setFormData] = useState({
     projectName: '',
     description: '',
@@ -27,10 +55,9 @@ const EditProject = () => {
     projectcode: '',
   });
 
-  // Load project data
+  // Load project data once (refetches shouldn't overwrite in-progress edits)
   useEffect(() => {
-    const project = getProject(id);
-    if (project) {
+    if (project && loadedId !== id) {
       setFormData({
         projectName: project.projectName || '',
         description: project.description || '',
@@ -38,8 +65,9 @@ const EditProject = () => {
         deployLink: project.deployLink || '',
         projectcode: project.projectcode || '',
       });
+      setLoadedId(id);
     }
-  }, [id, getProject]);
+  }, [id, project, loadedId]);
 
   // Handle input change
   const handleChange = (e) => {
@@ -48,51 +76,16 @@ const EditProject = () => {
   };
 
   // Handle file input
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    setUploading(true);
-
-    const formDataUpload = new FormData();
-    formDataUpload.append('image', file);
-
-    try {
-      const res = await axios.put(API_URLS.uploadimage(id), formDataUpload, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-
-      setFormData((prev) => ({ ...prev, url: res.data.url }));
-      toast({ title: 'Image uploaded!', description: 'Preview updated.' });
-    } catch (error) {
-      console.error('Upload failed', error);
-      toast({ title: 'Error', description: 'Image upload failed.', variant: 'destructive' });
-    } finally {
-      setUploading(false);
-    }
+    uploadImage.mutate({ id, file });
   };
 
   // Submit update
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-
-    try {
-      await updateProject(id, formData);
-      toast({
-        title: 'Project updated!',
-        description: 'Your changes have been saved successfully.',
-      });
-      navigate('/admin/projects');
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to update project.',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
+    updateProject.mutate({ id, data: formData });
   };
 
   return (

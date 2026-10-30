@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Pencil, Trash2, Plus, ExternalLink, Star } from 'lucide-react';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { Button } from '@/components/ui/button';
-import { useProjects } from '@/contexts/ProjectsContext';
+import { useProjects, useDeleteProject } from '@/hooks/useProjects';
 import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
@@ -17,18 +17,30 @@ import {
 } from '@/components/ui/alert-dialog';
 
 const ManageProjects = () => {
-  const { projects, deleteProject } = useProjects();
-  // console.log('Projects in ManageProjects:', deleteProject);
+  const { projects } = useProjects();
   const { toast } = useToast();
   const [deleteId, setDeleteId] = useState(null);
 
-  const handleDelete = () => {
-    if (deleteId) {
-      deleteProject(deleteId);
+  const deleteProject = useDeleteProject({
+    onSuccess: () => {
       toast({
         title: 'Project deleted',
         description: 'The project has been removed successfully.',
       });
+    },
+    onError: (error) => {
+      console.error('Error deleting project:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to delete project.',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const handleDelete = () => {
+    if (deleteId) {
+      deleteProject.mutate(deleteId);
       setDeleteId(null);
     }
   };
